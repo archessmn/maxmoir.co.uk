@@ -12,8 +12,8 @@ app.route("/*").get((req, res) => {
 })
 
 
-var privateKey = fs.readFileSync( '/etc/nginx/ssl/cert.key' );
-var certificate = fs.readFileSync( '/etc/nginx/ssl/cert.pem' );
+var privateKey = fs.readFileSync( '/etc/nginx/ssl/maxmoir.co.uk.key' );
+var certificate = fs.readFileSync( '/etc/nginx/ssl/maxmoir.co.uk.pem' );
 
 console.log("Server Started")
 
