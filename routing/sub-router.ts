@@ -1,4 +1,5 @@
 import Express from "express"
+import { ModuleBlock } from "typescript"
 
 export function router(req: Express.Request, res: Express.Response) {
   // res.send(`${req.headers.host}${req.url}`)
@@ -22,6 +23,11 @@ export function router(req: Express.Request, res: Express.Response) {
     var subRouter = require("./subs/root")
   }
 
-  subRouter(req, res)
+  try {
+    subRouter(req, res)
+  } catch (e) {
+    res.send("An error occurred, please return to https://maxmoir.co.uk if this issue persists.")
+  }
+  
 
 }
