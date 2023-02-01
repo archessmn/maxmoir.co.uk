@@ -1,15 +1,13 @@
-var fs = require("fs"),
-  https = require("https")
+import fs from "fs"
+import https from "https"
 
+import Express from "express"
 
-var express = require("express"),
-  app=express()
+import { router } from "./routing/sub-router"
 
+var app = Express()
 
-
-app.route("/*").get((req, res) => {
-  res.send("HELLO")
-})
+app.all("/*", (req, res) => router(req, res))
 
 
 var privateKey = fs.readFileSync( '/etc/nginx/ssl/maxmoir.co.uk.key' );
