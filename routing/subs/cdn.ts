@@ -4,17 +4,24 @@ import path from "path"
 
 function router(req: Express.Request, res: Express.Response) {
 
-  // console.log("CDN Request")
-
   var resourceURL : string = req.url
 
-  // console.log(fs.readdirSync('./routing/routes/src/'))
-
-  // console.log(path.join(process.cwd(), "/routing/routes/src", resourceURL))
+  if (resourceURL == "/") {
+    res.render("app.ejs")
+    return
+  }
 
   try {
     if (fs.existsSync(`${process.cwd()}/routing/routes/src${resourceURL}`)) {
-      // console.log("Hello")
+
+      var fileType : string = resourceURL.split(".").at(-1) || "null"
+
+      if (fileType === "css") {
+        res.setHeader("Cache-Control", "")
+      }
+
+      // console.log(fileType)
+
       res.sendFile(path.join(process.cwd(), "/routing/routes/src", resourceURL))
     } else {
       res.destroy()
