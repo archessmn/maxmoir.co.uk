@@ -7,6 +7,7 @@ import dotENV from "dotenv"
 import flash from "express-flash"
 import session from "express-session"
 import methodOverride from "method-override"
+import ws from "ws"
 
 /* Set up .env */
 dotENV.config()
@@ -17,6 +18,10 @@ var app = Express()
 /* SSL Key locations on server */
 var privateKey = fs.readFileSync( '/etc/nginx/ssl/maxmoir.co.uk.key' );
 var certificate = fs.readFileSync( '/etc/nginx/ssl/maxmoir.co.uk.pem' );
+
+
+
+
 
 
 /* Set up settings and middleware */
@@ -60,7 +65,25 @@ app.all("/*", (req, res) => router(req, res))
 /* Start server */
 console.log("Server Started")
 
-https.createServer({
+const server = https.createServer({
     key: privateKey,
     cert: certificate
 }, app).listen(8080, "0.0.0.0");
+
+const wssServer = new ws.Server({ server: server })
+wssServer.on("connection", socket => {
+  socket.on('message', message => {
+    console.log(message.toString())
+    socket.pong()
+    socket.send("Hello there!")
+  });
+
+  socket.on("close", (code, reason) => {
+    console.log(`Socket closed. ${code}: ${reason}`)
+  })
+
+  socket.on("ping", ping => {
+    console.log(ping)
+    socket.pong()
+  })
+})
