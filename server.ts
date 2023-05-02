@@ -8,6 +8,7 @@ import flash from "express-flash"
 import session from "express-session"
 import methodOverride from "method-override"
 import ws from "ws"
+import webpush from "web-push"
 
 /* Set up .env */
 dotENV.config()
@@ -25,6 +26,13 @@ var certificate = fs.readFileSync( '/etc/nginx/ssl/maxmoir.co.uk.pem' );
 
 
 /* Set up settings and middleware */
+
+webpush.setVapidDetails(
+  `mailto:${process.env.VAPID_MAILTO}`,
+  process.env.VAPID_PUBLIC_KEY || "",
+  process.env.VAPID_PRIVATE_KEY|| ""
+)
+
 app.set("etag", false)
 app.set("view engine", "ejs")
 
@@ -47,8 +55,14 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
   var forwardURL : string = req.url
 
-  if (forwardURL.substring(0, 5) == "/cdn/") {
+  if (forwardURL.substring(0, 6) == "/fcdn/") {
+    const cdnRouter = require("./routing/subs/cdn")
+
+    cdnRouter(req, res)
+  } else if (forwardURL.substring(0, 5) == "/cdn/") {
+
     res.redirect(`https://cdn.maxmoir.co.uk${forwardURL.substring(4, forwardURL.length)}`)
+    
   } else {
     next()
   }

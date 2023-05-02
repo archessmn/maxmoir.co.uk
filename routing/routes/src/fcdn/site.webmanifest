@@ -1,0 +1,8 @@
+{
+    "name": "Max M App",
+    "short_name": "Max M App",
+    "icons": [],
+    "theme_color": "#ffffff",
+    "background_color": "#ffffff",
+    "display": "standalone"
+}

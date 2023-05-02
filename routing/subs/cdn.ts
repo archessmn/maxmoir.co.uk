@@ -14,11 +14,11 @@ function router(req: Express.Request, res: Express.Response) {
   try {
     if (fs.existsSync(`${process.cwd()}/routing/routes/src${resourceURL}`)) {
 
-      var fileType : string = resourceURL.split(".").at(-1) || "null"
+      var fileType : string = resourceURL.split(".")[-1] || "null"
 
-      if (fileType === "css") {
-        res.setHeader("Cache-Control", "")
-      }
+      // if (fileType === "css") {
+      //   res.setHeader("Cache-Control", "")
+      // }
 
       // console.log(fileType)
 
